@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
@@ -36,25 +39,19 @@ require __DIR__.'/../vendor/autoload.php';
 */
 
 $app = require_once __DIR__.'/../bootstrap/app.php';
-
-/*
-|--------------------------------------------------------------------------
-| Run The Application
-|--------------------------------------------------------------------------
-|
-| Once we have the application, we can handle the incoming request
-| through the kernel, and send the associated response back to
-| the client's browser allowing them to enjoy the creative
-| and wonderful application we have prepared for them.
-|
-*/
+$app->get('/', function () use ($app) {
+    return $app->version();
+});
 
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
+$kernel->bootstrap();
+
+$app->get('/', function () use ($app): string {
+    return $app->version();
+});
 $response = $kernel->handle(
     $request = Illuminate\Http\Request::capture()
 );
-
 $response->send();
-
 $kernel->terminate($request, $response);
